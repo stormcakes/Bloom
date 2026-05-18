@@ -8,7 +8,7 @@ import { format } from "date-fns";
 export const dynamic = "force-dynamic";
 
 const MENU_ITEMS = [
-  { label: "My Profile", href: "/profile/edit", icon: "👤", comingSoon: true },
+  { label: "My Profile", href: "/profile/edit", icon: "👤", comingSoon: false },
   { label: "Themes", href: "/profile/themes", icon: "🎨", comingSoon: false },
   { label: "Reminders", href: "/profile/reminders", icon: "🔔", badge: "On", comingSoon: true },
   { label: "Bible Version", href: "/profile/bible-version", icon: "📖", badge: "NIV", comingSoon: true },
