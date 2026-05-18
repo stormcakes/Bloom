@@ -103,6 +103,8 @@ export async function PATCH(request: Request) {
     .eq("user_id", user.id)
     .single();
 
+  let newStreak: number | null = null;
+
   if (profile) {
     const today = todayISO();
     const lastActive = profile.last_active_date;
@@ -110,7 +112,7 @@ export async function PATCH(request: Request) {
     yesterday.setDate(yesterday.getDate() - 1);
     const yesterdayStr = yesterday.toISOString().split("T")[0];
 
-    const newStreak =
+    newStreak =
       lastActive === yesterdayStr
         ? profile.streak_current + 1
         : lastActive === today
@@ -122,11 +124,11 @@ export async function PATCH(request: Request) {
       .update({
         devotionals_completed: (profile.devotionals_completed ?? 0) + 1,
         streak_current: newStreak,
-        streak_longest: Math.max(profile.streak_longest ?? 0, newStreak),
+        streak_longest: Math.max(profile.streak_longest ?? 0, newStreak ?? 0),
         last_active_date: today,
       })
       .eq("user_id", user.id);
   }
 
-  return NextResponse.json({ data });
+  return NextResponse.json({ data, streak: newStreak });
 }

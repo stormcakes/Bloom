@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { GARDEN_MILESTONES } from "@/config/themes";
 import { cn } from "@/lib/utils";
+import MoodChart from "@/components/MoodChart";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +16,23 @@ export default async function GardenPage() {
     .select("display_name, streak_current, streak_longest, devotionals_completed, garden_stage")
     .eq("user_id", user.id)
     .single();
+
+  // Fetch last 30 days of mood check-ins
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 29);
+  const thirtyDaysAgoStr = thirtyDaysAgo.toISOString().split("T")[0];
+
+  const { data: moodCheckins } = await supabase
+    .from("mood_checkins")
+    .select("date, mood")
+    .eq("user_id", user.id)
+    .gte("date", thirtyDaysAgoStr)
+    .order("date", { ascending: true });
+
+  const moodEntries = (moodCheckins ?? []).map((c) => ({
+    date: c.date as string,
+    mood: c.mood as string,
+  }));
 
   const completed = profile?.devotionals_completed ?? 0;
   const streak = profile?.streak_current ?? 0;
@@ -139,6 +157,12 @@ export default async function GardenPage() {
             );
           })}
         </div>
+      </div>
+
+      {/* Emotional Journey */}
+      <div>
+        <p className="font-semibold text-sm text-foreground mb-3">Your Emotional Journey</p>
+        <MoodChart entries={moodEntries} />
       </div>
 
       {/* Scripture */}

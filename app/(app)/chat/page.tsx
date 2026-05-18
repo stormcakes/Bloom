@@ -7,6 +7,7 @@ import { Search, Send, Loader2 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
+import { UpgradeGate } from "@/components/UpgradeGate";
 
 const SUGGESTION_BUTTONS = [
   { icon: "🙏", text: "Yes, please pray for me" },
@@ -26,12 +27,23 @@ const QUICK_PROMPTS = [
 export default function ChatPage() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [userName, setUserName] = useState("Friend");
+  const [showUpgradeGate, setShowUpgradeGate] = useState(false);
+  const [upgradeMessage, setUpgradeMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { messages, input, handleInputChange, handleSubmit, isLoading, setInput, append } = useChat({
     api: "/api/chat",
     body: { session_id: sessionId },
+    onError: async (error) => {
+      try {
+        const body = JSON.parse((error as Error).message);
+        if (body?.error === "limit_reached") {
+          setUpgradeMessage(body.message);
+          setShowUpgradeGate(true);
+        }
+      } catch { /* not a JSON error */ }
+    },
   });
 
   useEffect(() => {
@@ -65,6 +77,12 @@ export default function ChatPage() {
 
   return (
     <div className="flex flex-col h-[calc(100dvh-3.5rem)]">
+      {showUpgradeGate && (
+        <UpgradeGate
+          message={upgradeMessage || `You've used all ${10} free AI chat messages this month. Upgrade to Premium for unlimited conversations with Bloom.`}
+          onClose={() => setShowUpgradeGate(false)}
+        />
+      )}
       {/* Header */}
       <div className="flex items-center justify-between px-4 pt-10 pb-3 border-b border-border/30">
         <div className="flex items-center gap-3">
