@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 const MENU_ITEMS = [
   { label: "My Profile", href: "/profile/edit", icon: "👤", comingSoon: false },
   { label: "Themes", href: "/profile/themes", icon: "🎨", comingSoon: false },
-  { label: "Reminders", href: "/profile/reminders", icon: "🔔", badge: "On", comingSoon: true },
+  { label: "Reminders", href: "/profile/reminders", icon: "🔔", comingSoon: false },
   { label: "Bible Version", href: "/profile/bible-version", icon: "📖", badge: "NIV", comingSoon: true },
   { label: "Privacy", href: "/profile/privacy", icon: "🔒", comingSoon: true },
   { label: "Help & Support", href: "/support", icon: "💬", comingSoon: true },

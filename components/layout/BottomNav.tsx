@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 const LEFT_NAV = [
   { href: "/dashboard", icon: Home, label: "Home" },
-  { href: "/devotional/history", icon: Calendar, label: "Plans" },
+  { href: "/plans", icon: Calendar, label: "Plans" },
 ];
 
 const RIGHT_NAV = [
