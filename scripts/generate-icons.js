@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-// Generates solid-color placeholder PNG icons for PWA manifest
+// Generates solid-color placeholder PNG icons for PWA manifest and iOS App Store.
+// Replace with real branded artwork before submitting to the App Store.
 const zlib = require('zlib');
 const fs = require('fs');
 const path = require('path');
@@ -48,13 +49,22 @@ function createPNG(width, height, r, g, b) {
   ]);
 }
 
-const outDir = path.join(__dirname, '..', 'public', 'icons');
-fs.mkdirSync(outDir, { recursive: true });
-
 // Bloom pink: #F472A0 = rgb(244, 114, 160)
 const [r, g, b] = [244, 114, 160];
 
-fs.writeFileSync(path.join(outDir, 'icon-192.png'), createPNG(192, 192, r, g, b));
-fs.writeFileSync(path.join(outDir, 'icon-512.png'), createPNG(512, 512, r, g, b));
+// PWA icons
+const pwaDir = path.join(__dirname, '..', 'public', 'icons');
+fs.mkdirSync(pwaDir, { recursive: true });
+fs.writeFileSync(path.join(pwaDir, 'icon-192.png'), createPNG(192, 192, r, g, b));
+fs.writeFileSync(path.join(pwaDir, 'icon-512.png'), createPNG(512, 512, r, g, b));
+console.log('✓ PWA icons → public/icons/');
 
-console.log('✓ Icons generated in public/icons/');
+// iOS App Icon (1024x1024 for Xcode universal icon)
+const iosIconDir = path.join(__dirname, '..', 'ios', 'App', 'App', 'Assets.xcassets', 'AppIcon.appiconset');
+fs.mkdirSync(iosIconDir, { recursive: true });
+fs.writeFileSync(path.join(iosIconDir, 'AppIcon-512@2x.png'), createPNG(1024, 1024, r, g, b));
+console.log('✓ iOS App Store icon → ios/App/App/Assets.xcassets/AppIcon.appiconset/');
+
+// iOS splash screen (LaunchImage)
+// Capacitor uses LaunchScreen.storyboard — set background via native project
+console.log('\n⚠️  Replace placeholder icons with real artwork before App Store submission!');
