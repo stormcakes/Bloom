@@ -8,7 +8,7 @@ const config: CapacitorConfig = {
   server: {
     // Point to your Vercel deployment URL.
     // Change this to your real URL before building for App Store.
-    url: "https://bloom-app.vercel.app",
+    url: "https://bloom-ten-fawn.vercel.app",
     cleartext: false,
     // Allow Capacitor native plugins to work over the server URL
     androidScheme: "https",

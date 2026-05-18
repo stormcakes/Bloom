@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
     serverActions: {
       allowedOrigins: [
         "localhost:3000",
-        "bloom-app.vercel.app", // update to match your actual Vercel domain
+        "bloom-ten-fawn.vercel.app",
       ],
     },
   },
