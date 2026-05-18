@@ -245,6 +245,63 @@
   .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
 }
 
+/* ─── Dark mode (system preference, light themes only) ─────────────────── */
+@media (prefers-color-scheme: dark) {
+  :root,
+  [data-theme="soft_feminine"],
+  [data-theme="cozy"],
+  [data-theme="minimalist"],
+  [data-theme="healing_season"],
+  [data-theme="student"],
+  [data-theme="kids_mode"],
+  [data-theme="beginner_bible"] {
+    --background: 220 18% 9%;
+    --foreground: 220 12% 92%;
+    --card: 220 16% 13%;
+    --card-foreground: 220 12% 92%;
+    --border: 220 16% 21%;
+    --muted: 220 14% 16%;
+    --muted-foreground: 220 12% 55%;
+    --secondary: 220 16% 17%;
+    --secondary-foreground: 220 12% 87%;
+    --input: 220 16% 21%;
+    --gradient-start: #0f1219;
+    --gradient-end: #141a24;
+  }
+
+  [data-theme="minimalist"] {
+    --background: 0 0% 9%;
+    --card: 0 0% 13%;
+    --card-foreground: 0 0% 92%;
+    --foreground: 0 0% 92%;
+    --border: 0 0% 20%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 52%;
+    --secondary: 0 0% 16%;
+    --secondary-foreground: 0 0% 87%;
+    --input: 0 0% 20%;
+    --primary: 0 0% 82%;
+    --primary-foreground: 0 0% 8%;
+    --gradient-start: #111111;
+    --gradient-end: #1a1a1a;
+  }
+
+  [data-theme="healing_season"] {
+    --background: 140 15% 9%;
+    --card: 140 12% 13%;
+    --card-foreground: 140 10% 92%;
+    --foreground: 140 10% 92%;
+    --border: 140 12% 21%;
+    --muted: 140 10% 16%;
+    --muted-foreground: 140 8% 55%;
+    --secondary: 140 12% 17%;
+    --secondary-foreground: 140 10% 87%;
+    --input: 140 12% 21%;
+    --gradient-start: #0c1410;
+    --gradient-end: #121a14;
+  }
+}
+
 /* Typography */
 html { scroll-behavior: smooth; }
 body { -webkit-tap-highlight-color: transparent; }

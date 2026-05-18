@@ -195,6 +195,18 @@ export default async function DashboardPage() {
         <ChevronRight className="h-4 w-4 text-muted-foreground flex-shrink-0" />
       </Link>
 
+      {/* Bible Explorer teaser */}
+      <Link href="/bible" className="bloom-card flex items-center gap-4 active:scale-[0.99] transition-transform">
+        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-100 to-indigo-50 flex items-center justify-center text-2xl flex-shrink-0">
+          📖
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="font-semibold text-sm text-foreground">Bible Explorer</p>
+          <p className="text-xs text-muted-foreground mt-0.5">Browse all 66 books</p>
+        </div>
+        <ChevronRight className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+      </Link>
+
     </div>
   );
 }

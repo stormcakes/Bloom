@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,16 +10,15 @@ import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import type {
   OnboardingState,
-  AgeRange,
   BibleFamiliarity,
   LifeSeason,
   EmotionalGoal,
-  TonePreference,
   BloomTheme,
 } from "@/types";
-import { THEMES } from "@/config/themes";
 
 const TOTAL_STEPS = 5;
+
+const FLOWER_STAGES = ["🌱", "🌿", "🌸", "🌺", "🌻"];
 
 // Step 1: Goals (multi-select grid with icons)
 const GOALS: { value: EmotionalGoal; label: string; icon: string; bg: string }[] = [
@@ -63,9 +62,11 @@ const BIBLE_LEVELS: { value: BibleFamiliarity; label: string; desc: string }[] =
 
 export default function OnboardingPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [step, setStep] = useState(1);
   const [direction, setDirection] = useState(1);
   const [saving, setSaving] = useState(false);
+  const [celebrating, setCelebrating] = useState(false);
   const [state, setState] = useState<OnboardingState>({
     step: 1,
     display_name: "",
@@ -80,6 +81,15 @@ export default function OnboardingPage() {
   const [extraNote, setExtraNote] = useState("");
 
   const progress = (step / TOTAL_STEPS) * 100;
+  const flowerEmoji = FLOWER_STAGES[step - 1];
+
+  // Persist referral code from URL into localStorage so it survives the flow
+  useEffect(() => {
+    const ref = searchParams.get("ref");
+    if (ref) {
+      localStorage.setItem("bloom_referral_code", ref.toUpperCase());
+    }
+  }, [searchParams]);
 
   function next() {
     setDirection(1);
@@ -118,8 +128,28 @@ export default function OnboardingPage() {
       onboarding_completed: true,
     }).eq("user_id", user.id);
 
-    router.push("/dashboard");
-    router.refresh();
+    // Apply referral code if one was stored during signup
+    const storedRef = localStorage.getItem("bloom_referral_code");
+    if (storedRef) {
+      try {
+        await fetch("/api/referral", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ code: storedRef }),
+        });
+      } catch {
+        // Non-fatal — don't block the user from entering the app
+      } finally {
+        localStorage.removeItem("bloom_referral_code");
+      }
+    }
+
+    setSaving(false);
+    setCelebrating(true);
+    setTimeout(() => {
+      router.push("/dashboard");
+      router.refresh();
+    }, 2200);
   }
 
   const variants = {
@@ -128,22 +158,90 @@ export default function OnboardingPage() {
     exit: (dir: number) => ({ x: dir * -50, opacity: 0 }),
   };
 
+  // Dashboard handoff celebration
+  if (celebrating) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-8"
+        style={{ background: "linear-gradient(160deg, #FFE8EE 0%, #FDF6F9 100%)" }}
+      >
+        <motion.div
+          initial={{ scale: 0.4, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 200, damping: 12 }}
+          className="flex flex-col items-center gap-4"
+        >
+          <div className="relative">
+            <div className="absolute inset-0 bg-rose-200/50 rounded-full blur-3xl scale-150" />
+            <motion.span
+              animate={{ rotate: [0, -8, 8, -4, 4, 0] }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="relative text-8xl block"
+            >
+              🌱
+            </motion.span>
+          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="text-center space-y-2"
+          >
+            <h2 className="text-3xl font-bold text-gray-800">Your garden is planted!</h2>
+            <p className="text-gray-500 text-sm">Taking you to Bloom…</p>
+          </motion.div>
+        </motion.div>
+        {[...Array(6)].map((_, i) => (
+          <motion.span
+            key={i}
+            initial={{ opacity: 0, y: 0, x: 0 }}
+            animate={{ opacity: [0, 1, 0], y: -120 - i * 20, x: (i % 2 === 0 ? 1 : -1) * (30 + i * 15) }}
+            transition={{ duration: 1.8, delay: 0.2 + i * 0.15, ease: "easeOut" }}
+            className="absolute text-2xl pointer-events-none"
+            style={{ bottom: "40%", left: "50%" }}
+          >
+            🌸
+          </motion.span>
+        ))}
+      </motion.div>
+    );
+  }
+
   return (
     <div
       className="min-h-screen flex flex-col"
       style={{ background: "linear-gradient(160deg, #FFE8EE 0%, #FDF6F9 100%)" }}
     >
-      {/* Progress bar */}
-      <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-rose-100">
-        <motion.div
-          className="h-full bg-rose-400 rounded-full"
-          animate={{ width: `${progress}%` }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
-        />
+      {/* Flower progress indicator */}
+      <div className="fixed top-0 left-0 right-0 z-50">
+        <div className="h-1 bg-rose-100">
+          <motion.div
+            className="h-full bg-rose-400 rounded-full"
+            animate={{ width: `${progress}%` }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+          />
+        </div>
+        <div className="flex justify-between px-8 pt-2 pb-1">
+          {FLOWER_STAGES.map((flower, i) => (
+            <motion.span
+              key={i}
+              animate={{
+                scale: step === i + 1 ? 1.4 : step > i + 1 ? 1 : 0.7,
+                opacity: step >= i + 1 ? 1 : 0.3,
+              }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              className="text-base leading-none"
+            >
+              {flower}
+            </motion.span>
+          ))}
+        </div>
       </div>
 
       {/* Header */}
-      <div className="flex items-center justify-between px-5 pt-8 pb-2">
+      <div className="flex items-center justify-between px-5 pt-14 pb-2">
         <button
           onClick={back}
           disabled={step === 1}
@@ -152,7 +250,15 @@ export default function OnboardingPage() {
           <ChevronLeft className="h-5 w-5 text-gray-500" />
         </button>
         <div className="flex items-center gap-1.5">
-          <span className="text-lg">🌸</span>
+          <motion.span
+            key={flowerEmoji}
+            initial={{ scale: 0.5, rotate: -20, opacity: 0 }}
+            animate={{ scale: 1, rotate: 0, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 260, damping: 14 }}
+            className="text-xl"
+          >
+            {flowerEmoji}
+          </motion.span>
           <span className="font-bold text-rose-400 text-base">Bloom</span>
         </div>
         <div className="w-9 h-9" />

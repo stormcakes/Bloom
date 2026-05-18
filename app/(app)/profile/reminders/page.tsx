@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronLeft, Bell, BellOff } from "lucide-react";
+import { todayISO } from "@/lib/utils";
 
 // Capacitor local notifications — only available in native app
 async function getNotificationsPlugin() {
@@ -21,6 +22,7 @@ export default function RemindersPage() {
   const [time, setTime] = useState("08:00");
   const [saved, setSaved] = useState(false);
   const [permissionState, setPermissionState] = useState<"granted" | "denied" | "prompt" | "unavailable">("unavailable");
+  const [versePreview, setVersePreview] = useState<{ ref: string; text: string } | null>(null);
 
   useEffect(() => {
     const storedEnabled = localStorage.getItem("bloom_notif_enabled");
@@ -28,6 +30,21 @@ export default function RemindersPage() {
     if (storedEnabled === "true") setEnabled(true);
     if (storedTime) setTime(storedTime);
     checkPermission();
+    // Load today's verse for notification preview
+    fetch(`/api/devotional/generate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ date: todayISO() }),
+    })
+      .then(r => r.json())
+      .then(({ data }) => {
+        if (data?.scripture_reference && data?.scripture_text) {
+          setVersePreview({ ref: data.scripture_reference, text: data.scripture_text });
+          const snippet = data.scripture_text.slice(0, 80) + (data.scripture_text.length > 80 ? "…" : "");
+          localStorage.setItem("bloom_verse_preview", `${snippet} — ${data.scripture_reference}`);
+        }
+      })
+      .catch(() => {/* silently ignore */});
   }, []);
 
   async function checkPermission() {
@@ -73,11 +90,16 @@ export default function RemindersPage() {
       next.setHours(hours, minutes, 0, 0);
       if (next <= now) next.setDate(next.getDate() + 1);
 
+      const storedVerse = localStorage.getItem("bloom_verse_preview");
+      const notifBody = storedVerse
+        ? `"${storedVerse}" — Open Bloom for today's devotional.`
+        : "Take a moment with God today. Open Bloom.";
+
       await plugin.schedule({
         notifications: [{
           id: 1001,
           title: "Your devotional is ready 🌸",
-          body: "Take a moment with God today. Open Bloom.",
+          body: notifBody,
           schedule: { at: next, repeats: true, every: "day" },
           sound: "default",
           smallIcon: "ic_stat_bloom",
@@ -172,9 +194,17 @@ export default function RemindersPage() {
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center flex-shrink-0 text-xl">
             🌸
           </div>
-          <div>
+          <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-foreground">Your devotional is ready 🌸</p>
-            <p className="text-xs text-muted-foreground">Take a moment with God today. Open Bloom.</p>
+            {versePreview ? (
+              <>
+                <p className="text-xs text-muted-foreground leading-relaxed mt-0.5 line-clamp-2">
+                  &ldquo;{versePreview.text.slice(0, 80)}{versePreview.text.length > 80 ? "…" : ""}&rdquo; — {versePreview.ref}
+                </p>
+              </>
+            ) : (
+              <p className="text-xs text-muted-foreground mt-0.5">Take a moment with God today. Open Bloom.</p>
+            )}
             <p className="text-xs text-muted-foreground mt-1">Bloom · {time}</p>
           </div>
         </div>

@@ -42,7 +42,14 @@ export async function updateSession(request: NextRequest) {
     pathname.startsWith("/journal") ||
     pathname.startsWith("/garden") ||
     pathname.startsWith("/profile") ||
-    pathname.startsWith("/onboarding");
+    pathname.startsWith("/referral") ||
+    pathname.startsWith("/onboarding") ||
+    pathname.startsWith("/bible") ||
+    pathname.startsWith("/prayer") ||
+    pathname.startsWith("/prompts") ||
+    pathname.startsWith("/memory") ||
+    pathname.startsWith("/plans") ||
+    pathname.startsWith("/prayer-wall");
   const isAuthRoute =
     pathname.startsWith("/login") || pathname.startsWith("/signup");
 

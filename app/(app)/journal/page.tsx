@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Heart, Trash2, Loader2, X, Edit3 } from "lucide-react";
+import { Plus, Heart, Trash2, Loader2, X, Edit3, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { formatDate, todayISO } from "@/lib/utils";
 import type { JournalEntry } from "@/types";
 import { cn } from "@/lib/utils";
+import { useSearchParams, useRouter } from "next/navigation";
 
 type Tab = "today" | "week" | "all";
 
@@ -20,6 +21,10 @@ const DAILY_PROMPTS = [
 ];
 
 export default function JournalPage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const promptParam = searchParams.get("prompt");
+
   const [tab, setTab] = useState<Tab>("today");
   const [entries, setEntries] = useState<JournalEntry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -28,8 +33,21 @@ export default function JournalPage() {
   const [isPrayer, setIsPrayer] = useState(false);
   const [saving, setSaving] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const promptBannerRef = useRef<HTMLDivElement>(null);
 
   const todayPrompt = DAILY_PROMPTS[new Date().getDay() % DAILY_PROMPTS.length];
+
+  // If a ?prompt= param arrives, pre-fill the compose area
+  useEffect(() => {
+    if (promptParam) {
+      setContent(promptParam);
+      setComposing(true);
+      // Scroll prompt banner into view after paint
+      setTimeout(() => {
+        promptBannerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+    }
+  }, [promptParam]);
 
   useEffect(() => {
     fetchEntries();
@@ -79,12 +97,21 @@ export default function JournalPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <h1 className="text-2xl font-bold text-foreground">Journal</h1>
-        <button
-          onClick={() => setComposing(true)}
-          className="w-9 h-9 rounded-full bg-primary flex items-center justify-center shadow-sm shadow-primary/30 active:scale-95 transition-transform"
-        >
-          <Edit3 className="h-4 w-4 text-white" />
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => router.push("/prompts")}
+            className="w-9 h-9 rounded-full border border-border flex items-center justify-center active:scale-95 transition-transform"
+            aria-label="Journal Prompts Library"
+          >
+            <BookOpen className="h-4 w-4 text-foreground" />
+          </button>
+          <button
+            onClick={() => setComposing(true)}
+            className="w-9 h-9 rounded-full bg-primary flex items-center justify-center shadow-sm shadow-primary/30 active:scale-95 transition-transform"
+          >
+            <Edit3 className="h-4 w-4 text-white" />
+          </button>
+        </div>
       </div>
 
       {/* Tabs */}
@@ -103,6 +130,31 @@ export default function JournalPage() {
         ))}
       </div>
 
+      {/* Prompt-from-library banner */}
+      {promptParam && (
+        <div
+          ref={promptBannerRef}
+          className="bloom-card mb-4 border-primary/30 bg-primary/5 space-y-2"
+        >
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex-1">
+              <p className="text-xs text-primary font-semibold uppercase tracking-wider mb-1">Prompt from Library</p>
+              <p className="text-sm font-medium text-foreground leading-relaxed">{promptParam}</p>
+            </div>
+            <button
+              onClick={() => {
+                setContent("");
+                setComposing(false);
+                router.replace("/journal");
+              }}
+              aria-label="Dismiss prompt"
+            >
+              <X className="h-4 w-4 text-muted-foreground" />
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Today's Prompt */}
       {tab === "today" && (
         <div className="bloom-card mb-4 space-y-3">
@@ -116,9 +168,10 @@ export default function JournalPage() {
           <div className="space-y-2">
             <Textarea
               placeholder="Write your thoughts…"
-              value={composing ? content : ""}
+              value={composing || promptParam ? content : ""}
               onChange={(e) => { setComposing(true); setContent(e.target.value); }}
-              rows={3}
+              rows={promptParam ? 5 : 3}
+              autoFocus={!!promptParam}
               className="bg-muted/40 border-0 focus-visible:ring-1 text-sm resize-none"
             />
             {content.trim() && (
