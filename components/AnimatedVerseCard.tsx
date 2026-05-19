@@ -77,7 +77,7 @@ export function AnimatedVerseCard({ text, reference, label = "Today's Verse" }: 
           transition={{ duration: 0.4, delay: 0.25 }}
           className="text-white font-semibold text-base leading-relaxed italic"
         >
-          &ldquo;{text.length > 120 ? text.slice(0, 120) + "…" : text}&rdquo;
+          &ldquo;{text.replace(/^["'"]+|["'"]+$/g, "").trim()}&rdquo;
         </motion.p>
         <motion.p
           initial={{ opacity: 0 }}
