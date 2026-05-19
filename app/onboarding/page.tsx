@@ -269,7 +269,12 @@ function OnboardingContent() {
           </motion.span>
           <span className="font-bold text-rose-400 text-base">Bloom</span>
         </div>
-        <div className="w-9 h-9" />
+        <button
+          onClick={() => router.push("/dashboard")}
+          className="text-xs text-gray-400 hover:text-gray-500 transition-colors px-2 py-2"
+        >
+          Skip
+        </button>
       </div>
 
       {/* Step content */}
