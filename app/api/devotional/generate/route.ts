@@ -79,6 +79,25 @@ export async function POST(request: Request) {
   }
 }
 
+export async function PUT(request: Request) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { devotional_id, is_bookmarked } = await request.json();
+
+  const { data, error } = await supabase
+    .from("devotionals")
+    .update({ is_bookmarked })
+    .eq("id", devotional_id)
+    .eq("user_id", user.id)
+    .select()
+    .single();
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  return NextResponse.json({ data });
+}
+
 export async function PATCH(request: Request) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();

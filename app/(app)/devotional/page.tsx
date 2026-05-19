@@ -45,6 +45,9 @@ export default function DevotionalPage() {
   const [savingJournal, setSavingJournal] = useState(false);
   const [section, setSection] = useState<"reflection" | "prayer" | "journal">("reflection");
 
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [shareToast, setShareToast] = useState(false);
+
   // Milestone state
   const [activeMilestone, setActiveMilestone] = useState<number | null>(null);
   const [showShareCard, setShowShareCard] = useState(false);
@@ -95,7 +98,34 @@ export default function DevotionalPage() {
     });
     const { data } = await res.json();
     setDevotional(data);
+    if (data?.is_bookmarked) setIsBookmarked(true);
     setLoading(false);
+  }
+
+  async function toggleBookmark() {
+    if (!devotional) return;
+    const next = !isBookmarked;
+    setIsBookmarked(next);
+    await fetch("/api/devotional/generate", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ devotional_id: devotional.id, is_bookmarked: next }),
+    });
+  }
+
+  async function shareDevotional() {
+    if (!devotional) return;
+    const text = `"${devotional.scripture_text}" — ${devotional.scripture_reference}\n\n${devotional.title}`;
+    const url = "https://bloom-ten-fawn.vercel.app";
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: devotional.title, text, url });
+      } else {
+        await navigator.clipboard.writeText(`${text}\n\n${url}`);
+        setShareToast(true);
+        setTimeout(() => setShareToast(false), 2000);
+      }
+    } catch { /* user cancelled share */ }
   }
 
   async function markComplete() {
@@ -200,6 +230,20 @@ export default function DevotionalPage() {
   // ── Devotional ────────────────────────────────────────────────────────────
   return (
     <>
+      {/* Clipboard copy toast */}
+      <AnimatePresence>
+        {shareToast && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            className="fixed bottom-28 left-1/2 -translate-x-1/2 z-50 bg-foreground text-background text-sm font-medium px-4 py-2 rounded-full shadow-lg"
+          >
+            Copied to clipboard ✓
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="flex flex-col min-h-screen">
         <div className="flex items-center justify-between px-4 pt-10 pb-4">
           <Link href="/dashboard" className="w-9 h-9 rounded-full bg-card border border-border/60 flex items-center justify-center shadow-sm">
@@ -211,10 +255,19 @@ export default function DevotionalPage() {
               <span>{MOODS.find(m => m.value === mood)?.emoji}</span>
               <span className="text-xs text-muted-foreground">{MOODS.find(m => m.value === mood)?.label}</span>
             </div>
-            <button className="w-9 h-9 rounded-full bg-card border border-border/60 flex items-center justify-center shadow-sm">
-              <Bookmark className="h-4 w-4 text-muted-foreground" strokeWidth={1.8} />
+            <button
+              onClick={toggleBookmark}
+              className="w-9 h-9 rounded-full bg-card border border-border/60 flex items-center justify-center shadow-sm active:scale-90 transition-transform"
+            >
+              <Bookmark
+                className={cn("h-4 w-4 transition-colors", isBookmarked ? "text-primary fill-primary" : "text-muted-foreground")}
+                strokeWidth={1.8}
+              />
             </button>
-            <button className="w-9 h-9 rounded-full bg-card border border-border/60 flex items-center justify-center shadow-sm">
+            <button
+              onClick={shareDevotional}
+              className="w-9 h-9 rounded-full bg-card border border-border/60 flex items-center justify-center shadow-sm active:scale-90 transition-transform"
+            >
               <Share2 className="h-4 w-4 text-muted-foreground" strokeWidth={1.8} />
             </button>
           </div>
