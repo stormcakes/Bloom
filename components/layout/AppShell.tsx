@@ -15,16 +15,9 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 
   const { data: profile } = await supabase
     .from("user_profiles")
-    .select("theme, onboarding_completed, life_season")
+    .select("theme")
     .eq("user_id", user.id)
     .single();
-
-  // Only redirect brand-new users: onboarding explicitly false AND no life_season chosen yet.
-  // This prevents existing users (whose onboarding_completed may be false due to DB defaults
-  // or DebugPanel resets) from being trapped in the onboarding loop.
-  if (profile && profile.onboarding_completed === false && profile.life_season === null) {
-    redirect("/onboarding");
-  }
 
   const theme = (profile?.theme ?? "cozy") as BloomTheme;
 

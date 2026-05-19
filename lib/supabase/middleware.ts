@@ -61,7 +61,15 @@ export async function updateSession(request: NextRequest) {
 
   if (user && isAuthRoute) {
     const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
+    // Check if this user still needs onboarding before landing on dashboard
+    const { data: profile } = await supabase
+      .from("user_profiles")
+      .select("onboarding_completed, life_season")
+      .eq("user_id", user.id)
+      .single();
+    const needsOnboarding =
+      profile && profile.onboarding_completed === false && profile.life_season === null;
+    url.pathname = needsOnboarding ? "/onboarding" : "/dashboard";
     return NextResponse.redirect(url);
   }
 
