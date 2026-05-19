@@ -110,6 +110,33 @@ const config: Config = {
           "0%, 100%": { transform: "scaleY(1) rotate(-2deg)" },
           "50%":      { transform: "scaleY(1.15) rotate(2deg)" },
         },
+        "neon-flicker": {
+          "0%, 19%, 21%, 23%, 25%, 54%, 56%, 100%": {
+            textShadow: "0 0 8px rgba(139,92,246,0.9), 0 0 20px rgba(139,92,246,0.6), 0 0 40px rgba(139,92,246,0.3)",
+            opacity: "1",
+          },
+          "20%, 24%, 55%": { textShadow: "none", opacity: "0.8" },
+        },
+        "cross-pulse": {
+          "0%, 100%": { filter: "drop-shadow(0 0 6px rgba(168,85,247,0.6))" },
+          "50%":      { filter: "drop-shadow(0 0 20px rgba(168,85,247,1)) drop-shadow(0 0 40px rgba(139,92,246,0.5))" },
+        },
+        "xp-shimmer": {
+          "0%":   { backgroundPosition: "-200% center" },
+          "100%": { backgroundPosition: "200% center" },
+        },
+        "star-twinkle": {
+          "0%, 100%": { opacity: "0.2", transform: "scale(0.8)" },
+          "50%":      { opacity: "1",   transform: "scale(1.3)" },
+        },
+        "eagle-float": {
+          "0%, 100%": { transform: "translateY(0) rotate(-2deg)" },
+          "50%":      { transform: "translateY(-8px) rotate(3deg)" },
+        },
+        "border-glow": {
+          "0%, 100%": { boxShadow: "0 0 8px 1px rgba(139,92,246,0.3), inset 0 0 8px rgba(139,92,246,0.05)" },
+          "50%":      { boxShadow: "0 0 24px 4px rgba(139,92,246,0.7), inset 0 0 16px rgba(139,92,246,0.12)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -121,6 +148,12 @@ const config: Config = {
         "orb-drift": "orb-drift var(--orb-duration, 18s) ease-in-out infinite",
         "spring-tap": "spring-tap 0.35s cubic-bezier(0.34,1.56,0.64,1)",
         "flame": "flame 1.4s ease-in-out infinite",
+        "neon-flicker": "neon-flicker 6s linear infinite",
+        "cross-pulse": "cross-pulse 2s ease-in-out infinite",
+        "xp-shimmer": "xp-shimmer 2.5s linear infinite",
+        "star-twinkle": "star-twinkle var(--twinkle-duration, 3s) ease-in-out infinite",
+        "eagle-float": "eagle-float 4s ease-in-out infinite",
+        "border-glow": "border-glow 3s ease-in-out infinite",
       },
       backgroundImage: {
         "gradient-bloom": "linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%)",

@@ -71,13 +71,15 @@ export function AnimatedVerseCard({ text, reference, label = "Today's Verse" }: 
             </svg>
             {/* Glow behind peak */}
             <div className="absolute bottom-6 right-12 w-20 h-20 rounded-full bg-purple-400/20 blur-2xl" />
-            {/* Eagle */}
-            <div
+            {/* Eagle — animated float */}
+            <motion.div
               className="absolute"
-              style={{ top: "10%", right: "8%", fontSize: "2rem", filter: "drop-shadow(0 0 8px rgba(139,92,246,0.8))", opacity: 0.85 }}
+              style={{ top: "10%", right: "8%", fontSize: "2rem", filter: "drop-shadow(0 0 10px rgba(139,92,246,0.9))", opacity: 0.9 }}
+              animate={{ y: [0, -10, 0], rotate: [-3, 4, -3], scale: [1, 1.08, 1] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             >
               🦅
-            </div>
+            </motion.div>
           </div>
 
           {/* Floating neon orbs */}

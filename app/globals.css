@@ -263,9 +263,7 @@
 [data-theme="gamer"] .bloom-card {
   background: hsl(260 55% 10%);
   border: 1px solid hsl(270 70% 50% / 0.45);
-  box-shadow: 0 0 0 1px hsl(270 80% 60% / 0.06),
-              0 0 18px 0 hsl(270 80% 60% / 0.1),
-              inset 0 1px 0 0 hsl(270 80% 80% / 0.06);
+  animation: border-glow 3s ease-in-out infinite;
 }
 
 [data-theme="gamer"] .bloom-card:active {
@@ -303,8 +301,10 @@
   border: 1px solid hsl(270 60% 35% / 0.4);
 }
 [data-theme="gamer"] .xp-bar-fill {
-  background: linear-gradient(90deg, hsl(190 100% 45%), hsl(270 100% 65%));
-  box-shadow: 0 0 8px 2px hsl(190 100% 50% / 0.5);
+  background: linear-gradient(90deg, hsl(190 100% 45%) 0%, hsl(270 100% 65%) 50%, hsl(190 100% 55%) 100%);
+  background-size: 200% auto;
+  animation: xp-shimmer 2.5s linear infinite;
+  box-shadow: 0 0 10px 2px hsl(190 100% 50% / 0.6);
 }
 
 /* Gamer level badge */

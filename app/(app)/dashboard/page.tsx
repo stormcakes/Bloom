@@ -73,7 +73,9 @@ export default async function DashboardPage() {
       <div className="flex items-center justify-between animate-fade-in stagger-1">
         <div className="flex items-center gap-2">
           <span className="text-xl">{isGamer ? "⚔️" : "🌸"}</span>
-          <span className={`text-lg font-bold ${isGamer ? "text-purple-300" : "text-foreground"}`} style={isGamer ? { textShadow: "0 0 10px rgba(139,92,246,0.6)" } : {}}>
+          <span
+            className={`text-lg font-bold ${isGamer ? "text-purple-300 animate-neon-flicker" : "text-foreground"}`}
+          >
             {isGamer ? "BLOOM.GG" : "Bloom"}
           </span>
         </div>
@@ -108,8 +110,8 @@ export default async function DashboardPage() {
             <div className="flex items-start gap-4">
               {/* Glowing cross */}
               <div className="flex-shrink-0 w-14 h-14 flex items-center justify-center relative">
-                <div className="absolute inset-0 rounded-xl bg-purple-500/20 blur-md" />
-                <svg viewBox="0 0 40 40" className="relative w-10 h-10" fill="none">
+                <div className="absolute inset-0 rounded-xl bg-purple-500/30 blur-lg animate-cross-pulse" />
+                <svg viewBox="0 0 40 40" className="relative w-10 h-10 animate-cross-pulse" fill="none">
                   <rect x="16" y="4" width="8" height="32" rx="2" fill="url(#crossGrad)" />
                   <rect x="4" y="13" width="32" height="8" rx="2" fill="url(#crossGrad)" />
                   <defs>

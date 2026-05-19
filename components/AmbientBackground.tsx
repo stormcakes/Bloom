@@ -26,29 +26,38 @@ export function AmbientBackground() {
     <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none" aria-hidden>
       {isGamer ? (
         <>
-          {/* Star field */}
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `
-                radial-gradient(1px 1px at 15% 12%, rgba(255,255,255,0.7) 0%, transparent 100%),
-                radial-gradient(1px 1px at 32% 28%, rgba(255,255,255,0.5) 0%, transparent 100%),
-                radial-gradient(1.5px 1.5px at 48% 8%, rgba(255,255,255,0.8) 0%, transparent 100%),
-                radial-gradient(1px 1px at 62% 35%, rgba(255,255,255,0.4) 0%, transparent 100%),
-                radial-gradient(1px 1px at 78% 18%, rgba(255,255,255,0.6) 0%, transparent 100%),
-                radial-gradient(1.5px 1.5px at 88% 42%, rgba(255,255,255,0.7) 0%, transparent 100%),
-                radial-gradient(1px 1px at 25% 55%, rgba(255,255,255,0.3) 0%, transparent 100%),
-                radial-gradient(1px 1px at 55% 65%, rgba(255,255,255,0.5) 0%, transparent 100%),
-                radial-gradient(1.5px 1.5px at 72% 72%, rgba(255,255,255,0.6) 0%, transparent 100%),
-                radial-gradient(1px 1px at 8%  80%, rgba(255,255,255,0.4) 0%, transparent 100%),
-                radial-gradient(1px 1px at 40% 88%, rgba(255,255,255,0.5) 0%, transparent 100%),
-                radial-gradient(1px 1px at 92% 85%, rgba(255,255,255,0.3) 0%, transparent 100%),
-                radial-gradient(1px 1px at 18% 95%, rgba(255,255,255,0.4) 0%, transparent 100%),
-                radial-gradient(1.5px 1.5px at 65% 92%, rgba(200,180,255,0.7) 0%, transparent 100%),
-                radial-gradient(1px 1px at 82% 60%, rgba(180,220,255,0.5) 0%, transparent 100%)
-              `,
-            }}
-          />
+          {/* Twinkling star field */}
+          {[
+            { top: "8%",  left: "12%", d: "2s",  s: 1.5 },
+            { top: "14%", left: "65%", d: "3.2s",s: 1   },
+            { top: "6%",  left: "45%", d: "2.7s",s: 2   },
+            { top: "22%", left: "82%", d: "4s",  s: 1.5 },
+            { top: "18%", left: "30%", d: "3.5s",s: 1   },
+            { top: "35%", left: "92%", d: "2.3s",s: 2   },
+            { top: "42%", left: "5%",  d: "5s",  s: 1   },
+            { top: "55%", left: "55%", d: "2.8s",s: 1.5 },
+            { top: "60%", left: "78%", d: "3.8s",s: 1   },
+            { top: "72%", left: "20%", d: "2.5s",s: 2   },
+            { top: "78%", left: "88%", d: "4.2s",s: 1.5 },
+            { top: "85%", left: "40%", d: "3s",  s: 1   },
+            { top: "90%", left: "70%", d: "2.6s",s: 2   },
+            { top: "48%", left: "35%", d: "4.5s",s: 1   },
+            { top: "30%", left: "50%", d: "3.3s",s: 1.5 },
+          ].map((star, i) => (
+            <div
+              key={i}
+              className="absolute rounded-full animate-star-twinkle"
+              style={{
+                top: star.top,
+                left: star.left,
+                width: `${star.s}px`,
+                height: `${star.s}px`,
+                background: i % 4 === 0 ? "rgba(200,180,255,0.9)" : i % 4 === 1 ? "rgba(180,220,255,0.9)" : "rgba(255,255,255,0.9)",
+                animationDuration: star.d,
+                animationDelay: `${i * 0.3}s`,
+              } as React.CSSProperties}
+            />
+          ))}
           {/* Circuit grid lines */}
           <div
             className="absolute inset-0 opacity-[0.05]"
