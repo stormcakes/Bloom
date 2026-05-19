@@ -249,7 +249,7 @@ export default function MemoryPage() {
                   🎉
                 </motion.div>
                 <div className="flex gap-2 text-2xl">
-                  {"🌟✨💛🌸✨🌟".split("").map((char, i) => (
+                  {Array.from("🌟✨💛🌸✨🌟").map((char, i) => (
                     <motion.span
                       key={i}
                       initial={{ opacity: 0, y: 10 }}
