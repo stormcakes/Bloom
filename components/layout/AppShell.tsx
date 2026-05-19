@@ -19,7 +19,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
     .eq("user_id", user.id)
     .single();
 
-  if (profile && !profile.onboarding_completed) {
+  if (profile && profile.onboarding_completed === false) {
     redirect("/onboarding");
   }
 
