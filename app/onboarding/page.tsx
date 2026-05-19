@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft } from "lucide-react";
@@ -61,6 +61,14 @@ const BIBLE_LEVELS: { value: BibleFamiliarity; label: string; desc: string }[] =
 ];
 
 export default function OnboardingPage() {
+  return (
+    <Suspense>
+      <OnboardingContent />
+    </Suspense>
+  );
+}
+
+function OnboardingContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [step, setStep] = useState(1);
