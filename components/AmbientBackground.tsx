@@ -26,28 +26,38 @@ export function AmbientBackground() {
     <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none" aria-hidden>
       {isGamer ? (
         <>
+          {/* Star field */}
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `
+                radial-gradient(1px 1px at 15% 12%, rgba(255,255,255,0.7) 0%, transparent 100%),
+                radial-gradient(1px 1px at 32% 28%, rgba(255,255,255,0.5) 0%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 48% 8%, rgba(255,255,255,0.8) 0%, transparent 100%),
+                radial-gradient(1px 1px at 62% 35%, rgba(255,255,255,0.4) 0%, transparent 100%),
+                radial-gradient(1px 1px at 78% 18%, rgba(255,255,255,0.6) 0%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 88% 42%, rgba(255,255,255,0.7) 0%, transparent 100%),
+                radial-gradient(1px 1px at 25% 55%, rgba(255,255,255,0.3) 0%, transparent 100%),
+                radial-gradient(1px 1px at 55% 65%, rgba(255,255,255,0.5) 0%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 72% 72%, rgba(255,255,255,0.6) 0%, transparent 100%),
+                radial-gradient(1px 1px at 8%  80%, rgba(255,255,255,0.4) 0%, transparent 100%),
+                radial-gradient(1px 1px at 40% 88%, rgba(255,255,255,0.5) 0%, transparent 100%),
+                radial-gradient(1px 1px at 92% 85%, rgba(255,255,255,0.3) 0%, transparent 100%),
+                radial-gradient(1px 1px at 18% 95%, rgba(255,255,255,0.4) 0%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 65% 92%, rgba(200,180,255,0.7) 0%, transparent 100%),
+                radial-gradient(1px 1px at 82% 60%, rgba(180,220,255,0.5) 0%, transparent 100%)
+              `,
+            }}
+          />
           {/* Circuit grid lines */}
           <div
-            className="absolute inset-0 opacity-[0.06]"
+            className="absolute inset-0 opacity-[0.05]"
             style={{
               backgroundImage: `
                 linear-gradient(rgba(139,92,246,0.8) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(139,92,246,0.8) 1px, transparent 1px)
               `,
               backgroundSize: "40px 40px",
-            }}
-          />
-          {/* Diagonal accent lines */}
-          <div
-            className="absolute inset-0 opacity-[0.03]"
-            style={{
-              backgroundImage: `repeating-linear-gradient(
-                45deg,
-                rgba(6,182,212,0.6) 0px,
-                rgba(6,182,212,0.6) 1px,
-                transparent 1px,
-                transparent 40px
-              )`,
             }}
           />
           {/* Neon glow orbs */}

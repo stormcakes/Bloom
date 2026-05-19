@@ -53,6 +53,33 @@ export function AnimatedVerseCard({ text, reference, label = "Today's Verse" }: 
           <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-cyan-400/60 rounded-tl-[var(--radius)]" />
           {/* Corner accent — bottom-right */}
           <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-purple-400/60 rounded-br-[var(--radius)]" />
+          {/* Eagle + mountain silhouette (gamer mood illustration) */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-[var(--radius)]">
+            {/* Mountain silhouette */}
+            <svg
+              className="absolute bottom-0 right-0 opacity-20"
+              width="180" height="100" viewBox="0 0 180 100"
+              fill="none"
+            >
+              <polygon points="0,100 50,30 80,60 110,15 140,55 180,20 180,100" fill="url(#mtGrad)" />
+              <defs>
+                <linearGradient id="mtGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#a78bfa" />
+                  <stop offset="100%" stopColor="#4c1d95" />
+                </linearGradient>
+              </defs>
+            </svg>
+            {/* Glow behind peak */}
+            <div className="absolute bottom-6 right-12 w-20 h-20 rounded-full bg-purple-400/20 blur-2xl" />
+            {/* Eagle */}
+            <div
+              className="absolute"
+              style={{ top: "10%", right: "8%", fontSize: "2rem", filter: "drop-shadow(0 0 8px rgba(139,92,246,0.8))", opacity: 0.85 }}
+            >
+              🦅
+            </div>
+          </div>
+
           {/* Floating neon orbs */}
           {ORBS.map((orb, i) => (
             <motion.div

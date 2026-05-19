@@ -92,27 +92,6 @@ export default async function DashboardPage() {
         </p>
       </div>
 
-      {/* Gamer XP bar */}
-      {isGamer && (
-        <div className="bloom-card animate-fade-in stagger-2 space-y-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Zap className="h-4 w-4 text-yellow-400" fill="currentColor" />
-              <span className="gamer-label text-xs font-bold uppercase tracking-wider">Experience Points</span>
-            </div>
-            <span className="text-xs font-bold text-white/80">{xpIntoLevel} / {xpPerLevel} XP</span>
-          </div>
-          <div className="xp-bar-track">
-            <div className="xp-bar-fill" style={{ width: `${xpPct}%` }} />
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="lv-badge">LV. {level}</span>
-            <span className="text-xs text-white/50">{totalXP} total XP</span>
-            <span className="lv-badge">LV. {level + 1}</span>
-          </div>
-        </div>
-      )}
-
       {/* Today's Verse — animated card */}
       <div className="animate-fade-in stagger-3">
         <AnimatedVerseCard
@@ -123,41 +102,116 @@ export default async function DashboardPage() {
 
       {/* Streak / Today's Plan card */}
       <div className="bloom-card animate-fade-in stagger-4">
-        <div className="flex items-center justify-between mb-3">
-          <div>
-            <p className={`font-semibold text-sm ${isGamer ? "gamer-section-label" : "text-foreground"}`}>
-              {isGamer ? "TODAY'S MISSION" : "Today's Plan"}
-            </p>
-            <p className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
-              {isGamer
-                ? <><Zap className="h-3 w-3 text-yellow-400" fill="currentColor" />{streak > 0 ? `${streak}-day streak — +${streak * 10} bonus XP` : "Start your streak today"}</>
-                : <><Flame className="h-3 w-3 text-orange-400 animate-flame" />{streak > 0 ? `${streak}-day streak — keep going!` : "Start your streak today"}</>
-              }
-            </p>
-          </div>
-          <Link href="/devotional" className="text-xs text-primary font-medium flex items-center gap-0.5">
-            {isGamer ? "ENTER" : "View"} <ChevronRight className="h-3.5 w-3.5" />
-          </Link>
-        </div>
-
-        <div className="flex items-center gap-2">
-          {["S", "M", "T", "W", "T", "F", "S"].map((day, i) => (
-            <div key={i} className="flex flex-col items-center gap-1 flex-1">
-              <div className={`w-full h-1.5 rounded-full transition-all duration-500 ${i < streak % 7 ? (isGamer ? "bg-cyan-400" : "bg-primary") : "bg-muted"}`} />
-              <span className="text-[10px] text-muted-foreground">{day}</span>
+        {isGamer ? (
+          /* Gamer plan card — cross icon + XP integrated, matching reference */
+          <div className="space-y-3">
+            <div className="flex items-start gap-4">
+              {/* Glowing cross */}
+              <div className="flex-shrink-0 w-14 h-14 flex items-center justify-center relative">
+                <div className="absolute inset-0 rounded-xl bg-purple-500/20 blur-md" />
+                <svg viewBox="0 0 40 40" className="relative w-10 h-10" fill="none">
+                  <rect x="16" y="4" width="8" height="32" rx="2" fill="url(#crossGrad)" />
+                  <rect x="4" y="13" width="32" height="8" rx="2" fill="url(#crossGrad)" />
+                  <defs>
+                    <linearGradient id="crossGrad" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor="#c084fc" />
+                      <stop offset="100%" stopColor="#7c3aed" />
+                    </linearGradient>
+                  </defs>
+                  <filter id="glow">
+                    <feGaussianBlur stdDeviation="2" result="blur" />
+                    <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                  </filter>
+                </svg>
+              </div>
+              {/* XP + streak info */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between">
+                  <p className="gamer-section-label text-xs font-bold">TODAY&apos;S PLAN</p>
+                  <Link href="/devotional" className="text-xs text-cyan-400 font-bold flex items-center gap-0.5">
+                    View <ChevronRight className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
+                <p className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
+                  <Flame className="h-3 w-3 text-orange-400" />
+                  {streak > 0 ? `${streak}-day streak — keep going!` : "Start your streak today"}
+                </p>
+                <p className="text-cyan-300 font-bold text-lg mt-1 leading-none">
+                  {xpIntoLevel} XP <span className="text-white/40 font-normal text-sm">/ {xpPerLevel} XP</span>
+                </p>
+                <div className="xp-bar-track mt-2">
+                  <div className="xp-bar-fill" style={{ width: `${xpPct}%` }} />
+                </div>
+              </div>
             </div>
-          ))}
-        </div>
 
-        {devotional && !devotional.is_completed && (
-          <Link href="/devotional" className={`mt-3 flex items-center justify-center gap-2 w-full h-10 rounded-xl text-sm font-medium active:scale-[0.97] transition-transform ${isGamer ? "bg-purple-500/20 text-purple-300 border border-purple-500/40 font-bold tracking-wide" : "bg-primary/10 text-primary"}`}>
-            {isGamer ? "► START MISSION" : "Continue today's devotional →"}
-          </Link>
-        )}
-        {devotional?.is_completed && (
-          <div className={`mt-3 flex items-center justify-center gap-2 w-full h-10 rounded-xl text-sm font-medium ${isGamer ? "bg-cyan-400/10 text-cyan-400 border border-cyan-400/30 font-bold tracking-wide" : "bg-green-50 text-green-600"}`}>
-            {isGamer ? "✓ MISSION COMPLETE  +120 XP" : "✓ Devotional complete!"}
+            {/* Day pills */}
+            <div className="flex items-center gap-1.5">
+              {["S", "M", "T", "W", "T", "F", "S"].map((day, i) => {
+                const active = i < streak % 7;
+                const isToday = i === new Date().getDay();
+                return (
+                  <div
+                    key={i}
+                    className={`flex-1 h-8 rounded-lg flex items-center justify-center text-[11px] font-bold transition-all duration-300 ${
+                      isToday
+                        ? "bg-purple-500 text-white shadow-[0_0_12px_rgba(139,92,246,0.6)]"
+                        : active
+                        ? "bg-purple-500/30 text-purple-300 border border-purple-500/40"
+                        : "bg-white/5 text-white/30 border border-white/10"
+                    }`}
+                  >
+                    {day}
+                  </div>
+                );
+              })}
+            </div>
+
+            {devotional && !devotional.is_completed && (
+              <Link href="/devotional" className="flex items-center justify-center gap-2 w-full h-10 rounded-xl bg-purple-500/20 text-purple-300 border border-purple-500/40 text-sm font-bold tracking-wide active:scale-[0.97] transition-transform">
+                ► START MISSION
+              </Link>
+            )}
+            {devotional?.is_completed && (
+              <div className="flex items-center justify-center gap-2 w-full h-10 rounded-xl bg-cyan-400/10 text-cyan-400 border border-cyan-400/30 text-sm font-bold tracking-wide">
+                ✓ MISSION COMPLETE · +120 XP
+              </div>
+            )}
           </div>
+        ) : (
+          /* Default plan card */
+          <>
+            <div className="flex items-center justify-between mb-3">
+              <div>
+                <p className="font-semibold text-sm text-foreground">Today&apos;s Plan</p>
+                <p className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
+                  <Flame className="h-3 w-3 text-orange-400 animate-flame" />
+                  {streak > 0 ? `${streak}-day streak — keep going!` : "Start your streak today"}
+                </p>
+              </div>
+              <Link href="/devotional" className="text-xs text-primary font-medium flex items-center gap-0.5">
+                View <ChevronRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
+            <div className="flex items-center gap-2">
+              {["S", "M", "T", "W", "T", "F", "S"].map((day, i) => (
+                <div key={i} className="flex flex-col items-center gap-1 flex-1">
+                  <div className={`w-full h-1.5 rounded-full transition-all duration-500 ${i < streak % 7 ? "bg-primary" : "bg-muted"}`} />
+                  <span className="text-[10px] text-muted-foreground">{day}</span>
+                </div>
+              ))}
+            </div>
+            {devotional && !devotional.is_completed && (
+              <Link href="/devotional" className="mt-3 flex items-center justify-center gap-2 w-full h-10 rounded-xl bg-primary/10 text-primary text-sm font-medium active:scale-[0.97] transition-transform">
+                Continue today&apos;s devotional →
+              </Link>
+            )}
+            {devotional?.is_completed && (
+              <div className="mt-3 flex items-center justify-center gap-2 w-full h-10 rounded-xl bg-green-50 text-green-600 text-sm font-medium">
+                ✓ Devotional complete!
+              </div>
+            )}
+          </>
         )}
       </div>
 
@@ -184,26 +238,36 @@ export default async function DashboardPage() {
         <p className={`font-semibold text-sm mb-3 ${isGamer ? "gamer-section-label" : "text-foreground"}`}>
           {isGamer ? "QUICK ACCESS" : "Quick Access"}
         </p>
-        <div className="grid grid-cols-4 gap-3">
-          {QUICK_ACCESS.map(({ href, icon, label, bg }) => (
-            <Link key={href} href={href} className="flex flex-col items-center gap-2">
-              {isGamer ? (
-                <div className="gamer-quick-card w-full aspect-square flex items-center justify-center active:scale-90 transition-transform duration-100">
-                  <div className="gamer-icon-hex w-10 h-10 flex items-center justify-center text-xl">
+        {isGamer ? (
+          <div className="grid grid-cols-4 gap-2">
+            {QUICK_ACCESS.map(({ href, icon, label }) => (
+              <Link key={href} href={href} className="flex flex-col items-center gap-2 active:scale-90 transition-transform duration-100">
+                <div className="gamer-quick-card w-full aspect-square flex flex-col items-center justify-center gap-1 relative overflow-hidden">
+                  {/* Corner accent */}
+                  <div className="absolute top-0 left-0 w-2.5 h-2.5 border-t border-l border-cyan-400/40" />
+                  <div className="absolute bottom-0 right-0 w-2.5 h-2.5 border-b border-r border-purple-400/40" />
+                  <div className="gamer-icon-hex w-11 h-11 flex items-center justify-center text-2xl">
                     {icon}
                   </div>
                 </div>
-              ) : (
+                <span className="text-[9px] text-cyan-300/70 font-bold tracking-widest uppercase text-center leading-tight">
+                  {label}
+                </span>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-4 gap-3">
+            {QUICK_ACCESS.map(({ href, icon, label, bg }) => (
+              <Link key={href} href={href} className="flex flex-col items-center gap-2">
                 <div className={`w-full aspect-square rounded-2xl border flex items-center justify-center text-2xl ${bg} active:scale-90 transition-transform duration-100`}>
                   {icon}
                 </div>
-              )}
-              <span className={`text-[11px] font-medium text-center leading-tight ${isGamer ? "text-cyan-300/80 tracking-wide uppercase text-[9px]" : "text-muted-foreground"}`}>
-                {label}
-              </span>
-            </Link>
-          ))}
-        </div>
+                <span className="text-[11px] text-muted-foreground font-medium text-center leading-tight">{label}</span>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Memory flashcards teaser */}
