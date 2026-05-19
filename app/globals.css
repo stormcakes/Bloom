@@ -220,6 +220,20 @@
 }
 
 @layer utilities {
+  /* Stagger fade-in delays for sequential content reveals */
+  .stagger-1 { animation-delay: 0ms;   }
+  .stagger-2 { animation-delay: 80ms;  }
+  .stagger-3 { animation-delay: 160ms; }
+  .stagger-4 { animation-delay: 240ms; }
+  .stagger-5 { animation-delay: 320ms; }
+  .stagger-6 { animation-delay: 400ms; }
+  .stagger-7 { animation-delay: 480ms; }
+
+  /* Ensures elements start hidden until animation fires */
+  .animate-fade-in {
+    animation-fill-mode: both;
+  }
+
   .bloom-gradient {
     background: linear-gradient(160deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
   }

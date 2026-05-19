@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Bell, ChevronRight, Flame } from "lucide-react";
 import { GARDEN_MILESTONES, THEMES } from "@/config/themes";
 import { getGreeting, todayISO } from "@/lib/utils";
+import { AnimatedVerseCard } from "@/components/AnimatedVerseCard";
 
 export const dynamic = "force-dynamic";
 
@@ -57,56 +58,42 @@ export default async function DashboardPage() {
   };
 
   return (
-    <div className="flex flex-col gap-5 px-4 pt-10 pb-28 animate-fade-in">
+    <div className="flex flex-col gap-5 px-4 pt-10 pb-28">
 
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between animate-fade-in stagger-1">
         <div className="flex items-center gap-2">
           <span className="text-xl">🌸</span>
           <span className="text-lg font-bold text-foreground">Bloom</span>
         </div>
-        <Link href="/profile/reminders" className="w-10 h-10 rounded-full bg-card border border-border/60 flex items-center justify-center shadow-sm">
+        <Link href="/profile/reminders" className="w-10 h-10 rounded-full bg-card border border-border/60 flex items-center justify-center shadow-sm active:scale-90 transition-transform">
           <Bell className="h-5 w-5 text-muted-foreground" strokeWidth={1.8} />
         </Link>
       </div>
 
       {/* Greeting */}
-      <div>
+      <div className="animate-fade-in stagger-2">
         <h1 className="text-2xl font-bold text-foreground">
           {getGreeting()}, {firstName} 🌸
         </h1>
         <p className="text-muted-foreground text-sm mt-0.5">You are deeply loved.</p>
       </div>
 
-      {/* Today's Verse */}
-      <div className="verse-card">
-        <p className="text-white/70 text-xs font-semibold uppercase tracking-wider mb-3">Today&apos;s Verse</p>
-        {devotional ? (
-          <>
-            <p className="text-white font-semibold text-base leading-relaxed italic">
-              &ldquo;{devotional.scripture_text.length > 120
-                ? devotional.scripture_text.slice(0, 120) + "…"
-                : devotional.scripture_text}&rdquo;
-            </p>
-            <p className="text-white/80 text-sm mt-2 font-medium">{devotional.scripture_reference}</p>
-          </>
-        ) : (
-          <>
-            <p className="text-white font-semibold text-base leading-relaxed italic">
-              &ldquo;I can do all things through Christ who strengthens me.&rdquo;
-            </p>
-            <p className="text-white/80 text-sm mt-2 font-medium">Philippians 4:13</p>
-          </>
-        )}
+      {/* Today's Verse — animated card */}
+      <div className="animate-fade-in stagger-3">
+        <AnimatedVerseCard
+          text={devotional?.scripture_text ?? "I can do all things through Christ who strengthens me."}
+          reference={devotional?.scripture_reference ?? "Philippians 4:13"}
+        />
       </div>
 
       {/* Streak card */}
-      <div className="bloom-card">
+      <div className="bloom-card animate-fade-in stagger-4">
         <div className="flex items-center justify-between mb-3">
           <div>
             <p className="font-semibold text-sm text-foreground">Today&apos;s Plan</p>
             <p className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
-              <Flame className="h-3 w-3 text-orange-400" />
+              <Flame className="h-3 w-3 text-orange-400 animate-flame" />
               {streak > 0 ? `${streak}-day streak — keep going!` : "Start your streak today"}
             </p>
           </div>
@@ -118,14 +105,14 @@ export default async function DashboardPage() {
         <div className="flex items-center gap-2">
           {["S", "M", "T", "W", "T", "F", "S"].map((day, i) => (
             <div key={i} className="flex flex-col items-center gap-1 flex-1">
-              <div className={`w-full h-1.5 rounded-full ${i < streak % 7 ? "bg-primary" : "bg-muted"}`} />
+              <div className={`w-full h-1.5 rounded-full transition-all duration-500 ${i < streak % 7 ? "bg-primary" : "bg-muted"}`} />
               <span className="text-[10px] text-muted-foreground">{day}</span>
             </div>
           ))}
         </div>
 
         {devotional && !devotional.is_completed && (
-          <Link href="/devotional" className="mt-3 flex items-center justify-center gap-2 w-full h-10 rounded-xl bg-primary/10 text-primary text-sm font-medium active:scale-[0.98] transition-transform">
+          <Link href="/devotional" className="mt-3 flex items-center justify-center gap-2 w-full h-10 rounded-xl bg-primary/10 text-primary text-sm font-medium active:scale-[0.97] transition-transform">
             Continue today&apos;s devotional →
           </Link>
         )}
@@ -136,9 +123,9 @@ export default async function DashboardPage() {
         )}
       </div>
 
-      {/* Weekly summary (shown if a summary exists) */}
+      {/* Weekly summary */}
       {summary && (
-        <div className="bloom-card space-y-3">
+        <div className="bloom-card space-y-3 animate-fade-in stagger-5">
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Your Week in Review 🌿</p>
             {summary.dominant_mood && (
@@ -155,12 +142,12 @@ export default async function DashboardPage() {
       )}
 
       {/* Quick Access */}
-      <div>
+      <div className="animate-fade-in stagger-5">
         <p className="font-semibold text-sm text-foreground mb-3">Quick Access</p>
         <div className="grid grid-cols-4 gap-3">
           {QUICK_ACCESS.map(({ href, icon, label, bg }) => (
             <Link key={href} href={href} className="flex flex-col items-center gap-2">
-              <div className={`w-full aspect-square rounded-2xl border flex items-center justify-center text-2xl ${bg} active:scale-95 transition-transform`}>
+              <div className={`w-full aspect-square rounded-2xl border flex items-center justify-center text-2xl ${bg} active:scale-90 transition-transform duration-100`}>
                 {icon}
               </div>
               <span className="text-[11px] text-muted-foreground font-medium text-center leading-tight">{label}</span>
@@ -170,7 +157,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Memory flashcards teaser */}
-      <Link href="/memory" className="bloom-card flex items-center gap-4 active:scale-[0.99] transition-transform">
+      <Link href="/memory" className="bloom-card flex items-center gap-4 active:scale-[0.97] transition-transform duration-100 animate-fade-in stagger-6">
         <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-100 to-yellow-50 flex items-center justify-center text-2xl flex-shrink-0">
           ✨
         </div>
@@ -182,7 +169,7 @@ export default async function DashboardPage() {
       </Link>
 
       {/* Garden teaser */}
-      <Link href="/garden" className="bloom-card flex items-center gap-4 active:scale-[0.99] transition-transform">
+      <Link href="/garden" className="bloom-card flex items-center gap-4 active:scale-[0.97] transition-transform duration-100 animate-fade-in stagger-7">
         <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-rose-100 to-purple-100 flex items-center justify-center text-2xl flex-shrink-0">
           {currentMilestone.emoji}
         </div>
@@ -196,7 +183,7 @@ export default async function DashboardPage() {
       </Link>
 
       {/* Bible Explorer teaser */}
-      <Link href="/bible" className="bloom-card flex items-center gap-4 active:scale-[0.99] transition-transform">
+      <Link href="/bible" className="bloom-card flex items-center gap-4 active:scale-[0.97] transition-transform duration-100 animate-fade-in stagger-7">
         <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-100 to-indigo-50 flex items-center justify-center text-2xl flex-shrink-0">
           📖
         </div>

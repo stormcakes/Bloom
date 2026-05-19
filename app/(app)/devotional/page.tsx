@@ -14,6 +14,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import MilestoneCelebration from "@/components/MilestoneCelebration";
 import MilestoneShareCard from "@/components/MilestoneShareCard";
+import { AnimatedVerseCard } from "@/components/AnimatedVerseCard";
 
 const MOODS = [
   { value: "rough", emoji: "😔", label: "Rough" },
@@ -227,18 +228,15 @@ export default function DevotionalPage() {
             </h1>
           </div>
 
-          <div className="bloom-card space-y-3">
-            <p className="text-xs font-semibold text-primary uppercase tracking-wider">
-              {devotional.scripture_reference}
-            </p>
-            <div className="border-l-2 border-primary/40 pl-4">
-              <p className="scripture-text text-foreground/80 text-sm leading-relaxed">
-                &ldquo;{devotional.scripture_text}&rdquo;
-              </p>
-            </div>
+          <div className="animate-fade-in stagger-2">
+            <AnimatedVerseCard
+              text={devotional.scripture_text}
+              reference={devotional.scripture_reference}
+              label={devotional.scripture_reference}
+            />
           </div>
 
-          <div className="bloom-card space-y-4">
+          <div className="bloom-card space-y-4 animate-fade-in stagger-3">
             <p className="text-sm text-foreground/85 leading-relaxed">{devotional.reflection}</p>
             <div className="p-3 rounded-xl bg-muted/60">
               <p className="text-xs text-muted-foreground font-medium mb-1">IN PLAIN WORDS</p>
@@ -247,7 +245,7 @@ export default function DevotionalPage() {
             <p className="text-sm text-foreground/80 leading-relaxed">{devotional.real_life_application}</p>
           </div>
 
-          <div>
+          <div className="animate-fade-in stagger-4">
             <div className="flex gap-1 p-1 bg-muted rounded-xl mb-4">
               {(["reflection", "prayer", "journal"] as const).map((tab) => (
                 <button

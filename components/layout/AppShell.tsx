@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { DebugPanel } from "@/components/debug/DebugPanel";
+import { AmbientBackground } from "@/components/AmbientBackground";
+import { PageTransitionWrapper } from "@/components/PageTransitionWrapper";
 import type { BloomTheme } from "@/types";
 
 export async function AppShell({ children }: { children: React.ReactNode }) {
@@ -25,9 +27,12 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <ThemeProvider theme={theme}>
-      <div className="min-h-screen bloom-gradient">
-        <main className="mx-auto max-w-lg min-h-screen pb-24 pt-safe">
-          {children}
+      <div className="min-h-screen bloom-gradient relative">
+        <AmbientBackground />
+        <main className="relative z-10 mx-auto max-w-lg min-h-screen pb-24 pt-safe">
+          <PageTransitionWrapper>
+            {children}
+          </PageTransitionWrapper>
         </main>
         <BottomNav />
         {process.env.NODE_ENV === "development" && <DebugPanel />}
