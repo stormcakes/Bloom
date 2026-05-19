@@ -259,6 +259,107 @@
   .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
 }
 
+/* ─── Gamer theme overrides ─────────────────────────────────────────────── */
+[data-theme="gamer"] .bloom-card {
+  background: hsl(260 55% 10%);
+  border: 1px solid hsl(270 70% 50% / 0.45);
+  box-shadow: 0 0 0 1px hsl(270 80% 60% / 0.06),
+              0 0 18px 0 hsl(270 80% 60% / 0.1),
+              inset 0 1px 0 0 hsl(270 80% 80% / 0.06);
+}
+
+[data-theme="gamer"] .bloom-card:active {
+  border-color: hsl(270 80% 65% / 0.7);
+  box-shadow: 0 0 24px 0 hsl(270 80% 65% / 0.2);
+}
+
+[data-theme="gamer"] .verse-card {
+  background: linear-gradient(160deg, #060018 0%, #1A0050 35%, #4A1D8C 70%, #7C3AED 100%);
+  border: 1px solid hsl(270 80% 60% / 0.6);
+  box-shadow: 0 0 32px 6px hsl(270 80% 60% / 0.22),
+              inset 0 1px 0 0 hsl(270 80% 80% / 0.12);
+}
+
+/* Neon cyan accent labels */
+[data-theme="gamer"] .gamer-label {
+  color: hsl(190 100% 55%);
+  letter-spacing: 0.12em;
+}
+
+/* XP progress bar */
+.xp-bar-track {
+  height: 8px;
+  border-radius: 999px;
+  overflow: hidden;
+  width: 100%;
+}
+.xp-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-theme="gamer"] .xp-bar-track {
+  background: hsl(260 50% 18%);
+  border: 1px solid hsl(270 60% 35% / 0.4);
+}
+[data-theme="gamer"] .xp-bar-fill {
+  background: linear-gradient(90deg, hsl(190 100% 45%), hsl(270 100% 65%));
+  box-shadow: 0 0 8px 2px hsl(190 100% 50% / 0.5);
+}
+
+/* Gamer level badge */
+.lv-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+[data-theme="gamer"] .lv-badge {
+  color: hsl(190 100% 55%);
+  background: hsl(190 80% 50% / 0.12);
+  border: 1px solid hsl(190 80% 50% / 0.3);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Hex icon container */
+[data-theme="gamer"] .gamer-icon-hex {
+  background: hsl(270 70% 16%);
+  border: 1px solid hsl(270 70% 45% / 0.5);
+  box-shadow: 0 0 12px 0 hsl(270 80% 60% / 0.15);
+  clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+}
+
+/* Greeting left accent bar */
+[data-theme="gamer"] .gamer-greeting-bar {
+  border-left: 3px solid hsl(270 100% 65%);
+  padding-left: 14px;
+  box-shadow: -4px 0 12px 0 hsl(270 80% 65% / 0.3);
+}
+
+/* Quick access gamer cards */
+.gamer-quick-card {
+  border-radius: 12px;
+}
+[data-theme="gamer"] .gamer-quick-card {
+  background: hsl(260 55% 10%);
+  border: 1px solid hsl(270 60% 40% / 0.4);
+  box-shadow: 0 0 12px 0 hsl(270 70% 55% / 0.08);
+}
+[data-theme="gamer"] .gamer-quick-card:active {
+  border-color: hsl(270 80% 65% / 0.8);
+  box-shadow: 0 0 16px 0 hsl(270 80% 65% / 0.2);
+}
+
+/* Section dividers */
+[data-theme="gamer"] .gamer-section-label::before,
+[data-theme="gamer"] .gamer-section-label::after {
+  content: " ✦ ";
+  opacity: 0.4;
+}
+
 /* ─── Dark mode (system preference, light themes only) ─────────────────── */
 @media (prefers-color-scheme: dark) {
   :root,
