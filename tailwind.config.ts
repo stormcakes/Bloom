@@ -77,8 +77,9 @@ const config: Config = {
           to: { height: "0" },
         },
         "fade-in": {
-          from: { opacity: "0", transform: "translateY(10px)" },
-          to: { opacity: "1", transform: "translateY(0)" },
+          "0%":   { opacity: "0", transform: "translateY(22px) scale(0.97)" },
+          "60%":  { opacity: "1", transform: "translateY(-3px) scale(1.005)" },
+          "100%": { opacity: "1", transform: "translateY(0) scale(1)" },
         },
         "bloom-pulse": {
           "0%, 100%": { opacity: "1", transform: "scale(1)" },
@@ -141,7 +142,7 @@ const config: Config = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-in": "fade-in 0.4s ease-out both",
+        "fade-in": "fade-in 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both",
         "bloom-pulse": "bloom-pulse 3s ease-in-out infinite",
         float: "float 4s ease-in-out infinite",
         "petal-rise": "petal-rise var(--petal-duration, 18s) ease-in-out infinite both",

@@ -45,8 +45,8 @@ export function BottomNav() {
           <Link href="/garden" onClick={tapHaptic}>
             <motion.div
               className="relative -top-5 flex flex-col items-center"
-              whileTap={{ scale: 0.85 }}
-              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              whileTap={{ scale: 0.78, rotate: 12, y: -4 }}
+              transition={{ type: "spring", stiffness: 700, damping: 10 }}
             >
               <div className={cn(
                 "w-14 h-14 rounded-full shadow-lg flex items-center justify-center",
@@ -86,14 +86,30 @@ function NavItem({
   return (
     <Link href={href} onClick={onTap}>
       <motion.div
-        whileTap={{ scale: 0.8 }}
-        transition={{ type: "spring", stiffness: 500, damping: 18 }}
+        whileTap={{ scale: 0.72, rotate: -8, y: -2 }}
+        transition={{ type: "spring", stiffness: 700, damping: 10 }}
         className={cn(
-          "flex flex-col items-center gap-1 px-4 py-3 min-w-[56px] transition-colors",
+          "relative flex flex-col items-center gap-1 px-4 py-3 min-w-[56px]",
           active ? "text-primary" : "text-muted-foreground hover:text-foreground"
         )}
       >
-        <Icon className="h-5 w-5" strokeWidth={active ? 2.5 : 1.8} />
+        {/* Sliding active dot */}
+        {active && (
+          <motion.div
+            layoutId="nav-dot"
+            className="absolute top-1.5 w-1 h-1 rounded-full bg-primary"
+            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+          />
+        )}
+
+        {/* Icon with scale pop on active */}
+        <motion.div
+          animate={active ? { scale: [1, 1.25, 1] } : { scale: 1 }}
+          transition={{ type: "spring", stiffness: 400, damping: 12 }}
+        >
+          <Icon className="h-5 w-5" strokeWidth={active ? 2.5 : 1.8} />
+        </motion.div>
+
         <span className={cn("text-[10px] font-medium", active && "font-semibold")}>
           {label}
         </span>

@@ -23,6 +23,11 @@ export function AnimatedVerseCard({ text, reference, label = "Today's Verse" }: 
   const cleanText = text.replace(/^["'"]+|["'"]+$/g, "").trim();
 
   return (
+    /* Breathing float wrapper — lifts 5px and back every 6s after mount */
+    <motion.div
+      animate={isGamer ? {} : { y: [0, -5, 0] }}
+      transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
+    >
     <motion.div
       initial={{ opacity: 0, scale: 0.97, y: 12 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -126,11 +131,15 @@ export function AnimatedVerseCard({ text, reference, label = "Today's Verse" }: 
         </>
       ) : (
         <>
-          {/* Pulsing glow ring */}
+          {/* Pulsing glow ring — synced to 6s breathe */}
           <motion.div
             className="absolute inset-0 rounded-[var(--radius)] pointer-events-none"
-            animate={{ boxShadow: ["0 0 0px 0px rgba(255,255,255,0)", "0 0 24px 6px rgba(255,255,255,0.08)", "0 0 0px 0px rgba(255,255,255,0)"] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            animate={{ boxShadow: [
+              "0 0 0px 0px rgba(255,255,255,0), 0 8px 32px rgba(168,85,247,0.12)",
+              "0 0 28px 8px rgba(255,255,255,0.1), 0 16px 48px rgba(168,85,247,0.25)",
+              "0 0 0px 0px rgba(255,255,255,0), 0 8px 32px rgba(168,85,247,0.12)",
+            ]}}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
           />
 
           {/* Shimmer sweep on mount */}
@@ -183,6 +192,7 @@ export function AnimatedVerseCard({ text, reference, label = "Today's Verse" }: 
           </div>
         </>
       )}
+    </motion.div>
     </motion.div>
   );
 }

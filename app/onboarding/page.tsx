@@ -108,9 +108,24 @@ function FloatingGarden() {
 // ── Animation variants ───────────────────────────────────────────────────────
 
 const pageVariants = {
-  enter: (dir: number) => ({ x: dir * 60, opacity: 0 }),
-  center: { x: 0, opacity: 1 },
-  exit: (dir: number) => ({ x: dir * -60, opacity: 0 }),
+  enter: (dir: number) => ({
+    rotateY: dir > 0 ? 50 : -50,
+    opacity: 0,
+    scale: 0.9,
+    z: -120,
+  }),
+  center: {
+    rotateY: 0,
+    opacity: 1,
+    scale: 1,
+    z: 0,
+  },
+  exit: (dir: number) => ({
+    rotateY: dir > 0 ? -50 : 50,
+    opacity: 0,
+    scale: 0.9,
+    z: -120,
+  }),
 };
 
 const containerVariants = {
@@ -429,7 +444,10 @@ function OnboardingContent() {
 
       {/* ── Step content ── */}
       <LayoutGroup>
-        <div className="relative z-10 flex-1 flex flex-col px-5 pt-2 pb-8 overflow-hidden">
+        <div
+          className="relative z-10 flex-1 flex flex-col px-5 pt-2 pb-8 overflow-hidden"
+          style={{ perspective: "1200px" }}
+        >
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={step}
@@ -438,7 +456,8 @@ function OnboardingContent() {
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+              style={{ transformStyle: "preserve-3d", backfaceVisibility: "hidden" }}
               className="flex flex-col gap-5 flex-1"
             >
 
